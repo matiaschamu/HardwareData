@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Management;
@@ -12,6 +13,30 @@ namespace BibliotecaMaf.Clases.HardwareData
 {
 	public static class HardwareData
 	{
+		//public struct Propiedad
+		//{
+		//	public readonly bool IsArray;
+		//	public readonly bool IsLocal;
+		//	public readonly string Name;
+		//	public readonly string Origin;
+		//	public readonly CimType Type;
+		//	public readonly string Value;
+	
+		//	public Propiedad(bool isArray, bool isLocal, string name, string origin, CimType type, object value)
+		//	{
+		//		IsArray = isArray;
+		//		IsLocal = isLocal;
+		//		Name = name;
+		//		Origin = origin;
+		//		Type = type;
+		//		var Val = mManagementBaseObject.Properties["Status"].Value;
+		//		a16 = (a16 == null) ? ("") : (a16.ToString());
+
+		//		Value = value;
+		//	}
+		//}
+
+
 		public struct Drive
 		{
 			public readonly string BytesPerSector;
@@ -111,6 +136,14 @@ namespace BibliotecaMaf.Clases.HardwareData
 			get { return System.IO.DriveInfo.GetDrives(); }
 		}
 
+		public static Drive[] UnidadesA
+		{
+			get
+			{
+				CargarDatosDrives();
+				return _drives;
+			}
+		}
 
 		public static Processor[] Procesadores
 		{
@@ -229,6 +262,7 @@ namespace BibliotecaMaf.Clases.HardwareData
 
 		private static void CargarDatosDrives()
 		{
+			Consulta("Win32_DiskDrive");
 			ManagementObjectSearcher searcher = new ManagementObjectSearcher("select * from " + "Win32_DiskDrive");
 
 			var cant = searcher.Get().Count;
@@ -284,6 +318,22 @@ namespace BibliotecaMaf.Clases.HardwareData
 					var a21 = mManagementBaseObject.Properties["TracksPerCylinder"].Value;
 					a21 = (a21 == null) ? ("") : (a21.ToString());
 
+
+
+					var a22 = mManagementBaseObject.Properties["Signature"].Value;
+					a22 = (a22 == null) ? ("") : (a22.ToString());
+					var a23 = mManagementBaseObject.Properties["SystemName"].Value;
+					a23 = (a23 == null) ? ("") : (a23.ToString());
+					var a24 = mManagementBaseObject.Properties["PNPDeviceID"].Value;
+					a24 = (a24 == null) ? ("") : (a24.ToString());
+					var a25 = mManagementBaseObject.Properties["Index"].Value;
+					a25 = (a25 == null) ? ("") : (a25.ToString());
+					var a26 = mManagementBaseObject.Properties["Caption"].Value;
+					a26 = (a26 == null) ? ("") : (a26.ToString());
+
+
+
+
 					_drives[i] = new Drive((string) a, (string) a1, (string) a2, (string) a3, (string) a4, (string) a5, (string) a6, (string) a7, (string) a8, (string) a9, (string) a10, (string) a11, (string) a12, (string) a13, (string) a14, (string) a15, (string) a16, (string) a17, (string) a18, (string) a19, (string) a20, (string) a21);
 					i++;
 				}
@@ -291,6 +341,223 @@ namespace BibliotecaMaf.Clases.HardwareData
 				{
 				}
 			}
+
+			Consulta("Win32_DiskPartition");
+
+			searcher = new ManagementObjectSearcher("select * from " + "Win32_DiskPartition ");
+
+			cant = searcher.Get().Count;
+			//_drives = new Drive[cant];
+			i = 0;
+
+			foreach (ManagementBaseObject mManagementBaseObject in searcher.Get())
+			{
+				try
+				{
+					//var a = mManagementBaseObject.Properties["IdentifyingDescriptions[0]"].Value;
+					//a = (a == null) ? ("") : (a.ToString());
+					//var a1 = mManagementBaseObject.Properties["OtherIdentifyingInfo"].Value;
+					//a1 = (a1 == null) ? ("") : (a1.ToString());
+					var a2 = mManagementBaseObject.Properties["StatusInfo"].Value;
+					a2 = (a2 == null) ? ("") : (a2.ToString());
+					var a3 = mManagementBaseObject.Properties["BootPartition"].Value;
+					a3 = (a3 == null) ? ("") : (a3.ToString());
+					var a4 = mManagementBaseObject.Properties["Caption"].Value;
+					a4 = (a4 == null) ? ("") : (a4.ToString());
+					var a5 = mManagementBaseObject.Properties["Description"].Value;
+					a5 = (a5 == null) ? ("") : (a5.ToString());
+					var a6 = mManagementBaseObject.Properties["DeviceID"].Value;
+					a6 = (a6 == null) ? ("") : (a6.ToString());
+					var a7 = mManagementBaseObject.Properties["DiskIndex"].Value;
+					a7 = (a7 == null) ? ("") : (a7.ToString());
+					var a8 = mManagementBaseObject.Properties["Index"].Value;
+					a8 = (a8 == null) ? ("") : (a8.ToString());
+					var a9 = mManagementBaseObject.Properties["InstallDate"].Value;
+					a9 = (a9 == null) ? ("") : (a9.ToString());
+					var a10 = mManagementBaseObject.Properties["Name"].Value;
+					a10 = (a10 == null) ? ("") : (a10.ToString());
+					var a11 = mManagementBaseObject.Properties["NumberOfBlocks"].Value;
+					a11 = (a11 == null) ? ("") : (a11.ToString());
+					var a12 = mManagementBaseObject.Properties["PNPDeviceID"].Value;
+					a12 = (a12 == null) ? ("") : (a12.ToString());
+					var a13 = mManagementBaseObject.Properties["PrimaryPartition"].Value;
+					a13 = (a13 == null) ? ("") : (a13.ToString());
+					var a14 = mManagementBaseObject.Properties["Size"].Value;
+					a14 = (a14 == null) ? ("") : (a14.ToString());
+					var a15 = mManagementBaseObject.Properties["StartingOffset"].Value;
+					a15 = (a15 == null) ? ("") : (a15.ToString());
+					var a16 = mManagementBaseObject.Properties["Type"].Value;
+					a16 = (a16 == null) ? ("") : (a16.ToString());
+					//var a17 = mManagementBaseObject.Properties["StatusInfo"].Value;
+					//a17 = (a17 == null) ? ("") : (a17.ToString());
+					//var a18 = mManagementBaseObject.Properties["VolumeDirty"].Value;
+					//a18 = (a18 == null) ? ("") : (a18.ToString());
+					//var a19 = mManagementBaseObject.Properties["VolumeName"].Value;
+					//a19 = (a19 == null) ? ("") : (a19.ToString());
+					//var a20 = mManagementBaseObject.Properties["VolumeSerialNumber"].Value;
+					//a20 = (a20 == null) ? ("") : (a20.ToString());
+					//var a21 = mManagementBaseObject.Properties["VolumeSerialNumber"].Value;
+					//a21 = (a21 == null) ? ("") : (a21.ToString());
+
+
+
+					//var a22 = mManagementBaseObject.Properties["Signature"].Value;
+					//a22 = (a22 == null) ? ("") : (a22.ToString());
+					//var a23 = mManagementBaseObject.Properties["SystemName"].Value;
+					//a23 = (a23 == null) ? ("") : (a23.ToString());
+					//var a24 = mManagementBaseObject.Properties["PNPDeviceID"].Value;
+					//a24 = (a24 == null) ? ("") : (a24.ToString());
+					//var a25 = mManagementBaseObject.Properties["Index"].Value;
+					//a25 = (a25 == null) ? ("") : (a25.ToString());
+					//var a26 = mManagementBaseObject.Properties["Caption"].Value;
+					//a26 = (a26 == null) ? ("") : (a26.ToString());
+
+
+
+
+					//_drives[i] = new Drive((string)a, (string)a1, (string)a2, (string)a3, (string)a4, (string)a5, (string)a6, (string)a7, (string)a8, (string)a9, (string)a10, (string)a11, (string)a12, (string)a13, (string)a14, (string)a15, (string)a16, (string)a17, (string)a18, (string)a19, (string)a20, (string)a21);
+					i++;
+				}
+				catch (Exception)
+				{
+				}
+			}
+
+			Consulta("Win32_LogicalDisk");
+
+			searcher = new ManagementObjectSearcher("select * from " + "Win32_LogicalDisk");
+
+			cant = searcher.Get().Count;
+			//_drives = new Drive[cant];
+			i = 0;
+
+			foreach (ManagementBaseObject mManagementBaseObject in searcher.Get())
+			{
+				try
+				{
+					var a = mManagementBaseObject.Properties["Access"].Value;
+					a = (a == null) ? ("") : (a.ToString());
+					var a1 = mManagementBaseObject.Properties["Caption"].Value;
+					a1 = (a1 == null) ? ("") : (a1.ToString());
+					var a2 = mManagementBaseObject.Properties["CreationClassName"].Value;
+					a2 = (a2 == null) ? ("") : (a2.ToString());
+					var a3 = mManagementBaseObject.Properties["Description"].Value;
+					a3 = (a3 == null) ? ("") : (a3.ToString());
+					var a4 = mManagementBaseObject.Properties["DeviceID"].Value;
+					a4 = (a4 == null) ? ("") : (a4.ToString());
+					var a5 = mManagementBaseObject.Properties["DriveType"].Value;
+					a5 = (a5 == null) ? ("") : (a5.ToString());
+					var a6 = mManagementBaseObject.Properties["FileSystem"].Value;
+					a6 = (a6 == null) ? ("") : (a6.ToString());
+					var a7 = mManagementBaseObject.Properties["FreeSpace"].Value;
+					a7 = (a7 == null) ? ("") : (a7.ToString());
+					var a8 = mManagementBaseObject.Properties["InstallDate"].Value;
+					a8 = (a8 == null) ? ("") : (a8.ToString());
+					var a9 = mManagementBaseObject.Properties["MediaType"].Value;
+					a9 = (a9 == null) ? ("") : (a9.ToString());
+					var a10 = mManagementBaseObject.Properties["Name"].Value;
+					a10 = (a10 == null) ? ("") : (a10.ToString());
+					var a11 = mManagementBaseObject.Properties["NumberOfBlocks"].Value;
+					a11 = (a11 == null) ? ("") : (a11.ToString());
+					var a12 = mManagementBaseObject.Properties["PNPDeviceID"].Value;
+					a12 = (a12 == null) ? ("") : (a12.ToString());
+					var a13 = mManagementBaseObject.Properties["ProviderName"].Value;
+					a13 = (a13 == null) ? ("") : (a13.ToString());
+					var a14 = mManagementBaseObject.Properties["Purpose"].Value;
+					a14 = (a14 == null) ? ("") : (a14.ToString());
+					var a15 = mManagementBaseObject.Properties["Size"].Value;
+					a15 = (a15 == null) ? ("") : (a15.ToString());
+					var a16 = mManagementBaseObject.Properties["Status"].Value;
+					a16 = (a16 == null) ? ("") : (a16.ToString());
+					var a17 = mManagementBaseObject.Properties["StatusInfo"].Value;
+					a17 = (a17 == null) ? ("") : (a17.ToString());
+					var a18 = mManagementBaseObject.Properties["VolumeDirty"].Value;
+					a18 = (a18 == null) ? ("") : (a18.ToString());
+					var a19 = mManagementBaseObject.Properties["VolumeName"].Value;
+					a19 = (a19 == null) ? ("") : (a19.ToString());
+					var a20 = mManagementBaseObject.Properties["VolumeSerialNumber"].Value;
+					a20 = (a20 == null) ? ("") : (a20.ToString());
+					//var a21 = mManagementBaseObject.Properties["VolumeSerialNumber"].Value;
+					//a21 = (a21 == null) ? ("") : (a21.ToString());
+
+
+
+					//var a22 = mManagementBaseObject.Properties["Signature"].Value;
+					//a22 = (a22 == null) ? ("") : (a22.ToString());
+					//var a23 = mManagementBaseObject.Properties["SystemName"].Value;
+					//a23 = (a23 == null) ? ("") : (a23.ToString());
+					//var a24 = mManagementBaseObject.Properties["PNPDeviceID"].Value;
+					//a24 = (a24 == null) ? ("") : (a24.ToString());
+					//var a25 = mManagementBaseObject.Properties["Index"].Value;
+					//a25 = (a25 == null) ? ("") : (a25.ToString());
+					//var a26 = mManagementBaseObject.Properties["Caption"].Value;
+					//a26 = (a26 == null) ? ("") : (a26.ToString());
+
+
+
+
+					//_drives[i] = new Drive((string)a, (string)a1, (string)a2, (string)a3, (string)a4, (string)a5, (string)a6, (string)a7, (string)a8, (string)a9, (string)a10, (string)a11, (string)a12, (string)a13, (string)a14, (string)a15, (string)a16, (string)a17, (string)a18, (string)a19, (string)a20, (string)a21);
+					i++;
+				}
+				catch (Exception)
+				{
+				}
+			}
+
+			Consulta("Win32_LogicalDiskRootDirectory ");
+
+
+
+
 		}
+
+
+		private static object[] Consulta(string key)
+		{
+			ManagementObjectSearcher searcher = new ManagementObjectSearcher("select * from " + key);
+
+
+
+		
+
+
+			var cant = searcher.Get().Count;
+			object[] _ret = new object[cant];
+
+			int i = 0;
+
+			foreach (ManagementBaseObject mManagementBaseObject in searcher.Get())
+			{
+
+				var propertycount = mManagementBaseObject.Properties.Count;
+				object[,] _pro = new object[propertycount, 2];
+				int k = 0;
+
+				foreach (System.Management.PropertyData P in mManagementBaseObject.Properties)
+				{
+
+					
+
+					_pro[k, 0] = P.Name;
+					_pro[k, 1] = P.Value;
+					_pro[k, 1] = (_pro[k, 1] == null) ? ("") : (_pro[k, 1].ToString());
+					k++;
+				}
+
+				_ret[i] = _pro;
+				i++;
+			}
+			return _ret;
+
+
+		}
+
+
+
+
+
+
+
+
 	}
 }
